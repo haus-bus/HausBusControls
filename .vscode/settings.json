@@ -1,0 +1,41 @@
+{
+    "terminal.integrated.env.windows": {
+        "PATH": "C:\\Users\\viktor.pankraz\\.platformio\\penv\\Scripts;C:\\Users\\viktor.pankraz\\.platformio\\penv;C:\\Tools\\Python27\\;C:\\Tools\\Python27\\Scripts;C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\Common7\\Tools\\..\\IDE;C:\\Program Files (x86)\\RSA SecurID Token Common;C:\\ProgramData\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files (x86)\\Diebold\\SimulatorFiles\\;C:\\Program Files\\Git\\cmd;C:\\Program Files (x86)\\Atmel\\Flip 3.4.7\\bin;C:\\Tools\\Microsoft VS Code\\bin;C:\\Tools\\Python27\\;C:\\Tools\\Python27\\Scripts;C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\Common7\\Tools\\..\\IDE;C:\\Program Files (x86)\\RSA SecurID Token Common;C:\\ProgramData\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files (x86)\\Diebold\\SimulatorFiles\\;C:\\Program Files\\Git\\cmd;C:\\Program Files (x86)\\Atmel\\Flip 3.4.7\\bin;C:\\Tools\\Microsoft VS Code\\bin",
+        "PLATFORMIO_CALLER": "vscode"
+    },
+    "C_Cpp.intelliSenseEngineFallback": "Disabled",
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "array": "cpp",
+        "*.tcc": "cpp",
+        "cctype": "cpp",
+        "clocale": "cpp",
+        "cmath": "cpp",
+        "cstdint": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp",
+        "cwchar": "cpp",
+        "cwctype": "cpp",
+        "deque": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "exception": "cpp",
+        "fstream": "cpp",
+        "functional": "cpp",
+        "initializer_list": "cpp",
+        "iosfwd": "cpp",
+        "istream": "cpp",
+        "limits": "cpp",
+        "new": "cpp",
+        "ostream": "cpp",
+        "numeric": "cpp",
+        "sstream": "cpp",
+        "stdexcept": "cpp",
+        "streambuf": "cpp",
+        "type_traits": "cpp",
+        "tuple": "cpp",
+        "typeinfo": "cpp",
+        "utility": "cpp"
+    },
+    "cquery.cacheDirectory": "${workspaceFolder}/.vscode/cquery_cached_index/"
+}
