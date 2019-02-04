@@ -15,9 +15,18 @@ class PortPin
 
    public:
 
+      static const uint8_t invalidId = 0xF;
+
       ////    Constructors and destructors    ////
+      inline PortPin() : pinNumber( invalidId ), portNumber( invalidId )
+      {
+      }
 
       inline PortPin( uint8_t _portNumber, uint8_t _pinNumber ) : pinNumber( _pinNumber ), portNumber( _portNumber )
+      {
+      }
+
+      inline PortPin( uint8_t _pinId ) : pinNumber( _pinId & 0xF ), portNumber( _pinId >> 4 )
       {
       }
 
@@ -25,27 +34,27 @@ class PortPin
 
       inline void configInput()
       {
-         pinMode( pinNumber, INPUT );
+         pinMode( getPinId(), INPUT );
       }
 
       void configOutput()
       {
-         pinMode( pinNumber, OUTPUT );
+         pinMode( getPinId(), OUTPUT );
       }
 
       inline bool isValid() const
       {
-         return true;
+         return portNumber != invalidId;
       }
 
       inline void enablePullup()
       {
-         digitalWrite( pinNumber, HIGH );
+         digitalWrite( getPinId(), HIGH );
       }
 
       inline void enablePulldown()
       {
-         digitalWrite( pinNumber, LOW );
+         digitalWrite( getPinId(), LOW );
       }
 
       inline uint8_t isInverted()
@@ -60,7 +69,7 @@ class PortPin
 
       inline uint8_t isSet() const
       {
-         bool pinState = digitalRead( pinNumber );
+         bool pinState = digitalRead( getPinId() );
          return pinState ^ inverted;
       }
 
@@ -79,6 +88,11 @@ class PortPin
       inline uint8_t getPinMask() const
       {
          return ( 1 << pinNumber );
+      }
+
+      inline uint8_t getPinId() const
+      {
+         return ( portNumber << 4 | pinNumber );
       }
 
       inline void setPinNumber( uint8_t p_pinNumber )

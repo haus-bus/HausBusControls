@@ -36,12 +36,12 @@ class DigitalOutput : public DigitalInput
 
       inline void clear()
       {
-         digitalWrite( pinNumber, inverted ? HIGH : LOW );
+         digitalWrite( getPinId(), inverted ? HIGH : LOW );
       }
 
       inline void set()
       {
-         digitalWrite( pinNumber, inverted ? LOW : HIGH );
+         digitalWrite( getPinId(), inverted ? LOW : HIGH );
       }
 
       inline void toggle()

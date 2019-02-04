@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Scheduler.h>
-#include <PortPinUnit.h>
+#include <DigitalPort.h>
+#include <DS1820.h>
 #include <SystemTime.h>
 #include <Traces/Logger.h>
 #include <ApplicationTable.h>
@@ -22,7 +23,6 @@ void printChar( char c )
 void setup()
 {
    // put your setup code here, to run once:
-   // initialize LED digital pin as an output.
    Serial.begin( 115200 );
    Logger::setStream( printChar );
    delay( 5000 );
@@ -52,8 +52,7 @@ void setup()
    UserSignature::setup( USER_SIGNATURE_SIZE );
    ApplicationTable::setup( APPLICATION_TABLE_SIZE );
    Scheduler::setup( MAX_JOBS );
-
-
+/*
    PortPinUnit* myTestPin = new PortPinUnit( PortPin( 0, LED_BUILTIN ) );
    evWakeup( myTestPin ).send();
    PortPinUnit::Command::Toggle params;
@@ -61,6 +60,20 @@ void setup()
    params.onTime = 1;
    params.quantity = 0; // endless
    myTestPin->cmdToggle( params );
+ */
+   DS1820::scanAndCreateDevices( PortPin( D4 ) );
+   DigitalPort* myPort = new DigitalPort( 0 );
+   if ( myPort != NULL )
+   {
+      myPort->setPins( 0, PortPin( D0 ) );
+      myPort->setPins( 1, PortPin( D1 ) );
+      myPort->setPins( 2, PortPin( D2 ) );
+      myPort->setPins( 3, PortPin( D3 ) );
+      myPort->setPins( 4, PortPin( D5 ) );
+      myPort->setPins( 5, PortPin( D6 ) );
+      myPort->setPins( 6, PortPin( D7 ) );
+      myPort->setPins( 7, PortPin( D8 ) );
+   }
 
    HausBusWebServer::instance();
 }
