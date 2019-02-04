@@ -37,7 +37,10 @@ void handleRestorFactory()
    HausBusWebServer::instance().onRestorFactory();
 }
 
-HausBusWebServer::HausBusWebServer() : connectTries( 0 ), server( 80 )
+HausBusWebServer::HausBusWebServer() :
+   firstConnect( true ),
+   connectTries( 0 ),
+   server( 80 )
 {
    setId( ( ClassId::WIFI << 8 ) | 1 );
    server.on( "/", handleRoot );
@@ -73,7 +76,7 @@ bool HausBusWebServer::notifyEvent( const Event& event )
             server.begin();
             SET_STATE_L1( RUNNING );
             DEBUG_M2( "SSID: ", configuration->getSsidString() );
-            DEBUG_M2( "PASS: ", configuration->getPasswordString() );
+            // DEBUG_M2( "PASS: ", configuration->getPasswordString() );
             if ( configuration->isNetworkConfigured() )
             {
                SET_STATE_L2( START_CONNECT );
@@ -124,8 +127,12 @@ bool HausBusWebServer::notifyEvent( const Event& event )
                   ERROR_1( "MDNS failed to start" );
                }
                DEBUG_M2( "myIP is ", WiFi.localIP().toString().begin() );
-               new Gateway( new UdpStream(), Gateway::UDP_9 );
-               new HomeAutomation();
+               if ( firstConnect )
+               {
+                  firstConnect = false;
+                  new Gateway( new UdpStream(), Gateway::UDP_9 );
+                  new HomeAutomation();
+               }
             }
             if ( ++connectTries > MAX_CONNECT_TRIES )
             {
@@ -166,7 +173,10 @@ bool HausBusWebServer::handleRequest( HACF* message )
    {
       DEBUG_H1( FSTR( ".getConfiguration()" ) );
       Response response( getId(), *message );
-      configuration->get( response.setConfiguration().configuration );
+      Configuration& conf = response.setConfiguration().configuration;
+      configuration->get( conf );
+      // replace password string by *
+      conf.hidePasswort();
       response.queue( getObject( message->header.getSenderId() ) );
    }
    else if ( cf.isCommand( Command::SET_CONFIGURATION ) )
@@ -228,16 +238,19 @@ void HausBusWebServer::onSubmit()
       DEBUG_M2( "new pass = ", server.arg( 1 ).begin() );
       if ( server.arg( 0 ).length() <= Configuration::MAX_STRING_LEN )
       {
-         if ( server.arg( 1 ).length() <= Configuration::MAX_STRING_LEN )
+         if ( ( server.arg( 0 ).length() + server.arg( 1 ).length() ) <= Configuration::MAX_STRING_LEN )
          {
             configuration->setSsidString( server.arg( 0 ).begin() );
             configuration->setPasswordString( server.arg( 1 ).begin() );
             server.send( 200, "text/html", "OK.<br>Reconnecting device with new network config......" );
             SET_STATE_L2( START_CONNECT );
             setSleepTime( 500 );
+            connectTries = 0;
             return;
          }
       }
+      server.send( 200, "text/html", "<h1>SSID + PASSWORD too long, please try again</h1><br><br><a href='/config'>Click here to configure your network</a>" );
+      return;
    }
    server.send( 200, "text/html", "<h1>something went wrong, please try again</h1><br><br><a href='/config'>Click here to configure your network</a>" );
 }
@@ -254,7 +267,7 @@ void HausBusWebServer::onUpdate()
       char logString[130];
       if ( millis() < 60000 )
       {
-         sprintf( logString, "Busy... Please try again in %04d seconds.", ( 60000 - millis() ) / (uint)1000 );
+         sprintf( logString, "Busy... Please try again in %04lu seconds.", ( 60000 - millis() ) / 1000 );
          server.send( 200, "text/html", logString );
       }
       else

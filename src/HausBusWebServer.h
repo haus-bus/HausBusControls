@@ -24,13 +24,11 @@ class HausBusWebServer : Reactive
 
       struct Configuration
       {
-         static const uint8_t MAX_STRING_LEN = 27;
+         static const uint8_t MAX_STRING_LEN = 54;
 
          ////    Attributes    ////
 
-         int8_t ssid[MAX_STRING_LEN + 1];
-
-         int8_t pass[MAX_STRING_LEN + 1];
+         int8_t logIn[MAX_STRING_LEN + 2];
 
          ////    Operations    ////
 
@@ -41,39 +39,43 @@ class HausBusWebServer : Reactive
             return defaultConfiguration;
          }
 
+         inline void hidePasswort()
+         {
+            uint8_t passPosition = strlen( (char*)logIn ) + 1;
+            for ( int i = passPosition; i < MAX_STRING_LEN + 1; i++ )
+            {
+               logIn[i] = '*';
+            }
+            logIn[MAX_STRING_LEN + 1] = 0;
+         }
+
          inline void checkAndCorrect()
          {
             for ( int i = 0; i < MAX_STRING_LEN; i++ )
             {
-               if ( ssid[i] < 0 )
+               if ( logIn[i] < 0 )
                {
-                  ssid[i] = 0;
-               }
-               if ( pass[i] < 0 )
-               {
-                  pass[i] = 0;
+                  logIn[i] = 0;
                }
             }
-            ssid[MAX_STRING_LEN] = 0;
-            pass[MAX_STRING_LEN] = 0;
+            logIn[MAX_STRING_LEN] = 0;
+            logIn[MAX_STRING_LEN + 1] = 0;
          }
       };
 
       class EepromConfiguration : public ConfigurationManager::EepromConfigurationTmpl<Configuration>
       {
          public:
-            int8_tx ssid[Configuration::MAX_STRING_LEN + 1];
-
-            int8_tx pass[Configuration::MAX_STRING_LEN + 1];
+            int8_tx logIn[Configuration::MAX_STRING_LEN + 2];
 
             const char* getSsidString()
             {
-               return (char*)ssid;
+               return (char*)logIn;
             }
 
             const char* getPasswordString()
             {
-               return (char*)pass;
+               return (char*)&logIn[strlen( (char*)logIn ) + 1];
             }
 
             void setSsidString( const char* _ssid )
@@ -82,13 +84,14 @@ class HausBusWebServer : Reactive
                get( conf );
                for ( int i = 0; i < conf.MAX_STRING_LEN; i++ )
                {
-                  conf.ssid[i] = _ssid[i];
-                  if ( conf.ssid[i] == 0 )
+                  conf.logIn[i] = _ssid[i];
+                  if ( conf.logIn[i] == 0 )
                   {
                      break;
                   }
                }
-               ssid[conf.MAX_STRING_LEN] = 0;
+               logIn[conf.MAX_STRING_LEN] = 0;
+               logIn[conf.MAX_STRING_LEN + 1] = 0;
                set( conf );
             }
 
@@ -96,15 +99,16 @@ class HausBusWebServer : Reactive
             {
                Configuration conf;
                get( conf );
-               for ( int i = 0; i < conf.MAX_STRING_LEN; i++ )
+               uint8_t passPosition = strlen( (char*)conf.logIn ) + 1;
+               for ( int i = passPosition; i < conf.MAX_STRING_LEN + 1; i++ )
                {
-                  conf.pass[i] = _pass[i];
-                  if ( conf.pass[i] == 0 )
+                  conf.logIn[i] = _pass[i - passPosition];
+                  if ( conf.logIn[i] == 0 )
                   {
                      break;
                   }
                }
-               pass[conf.MAX_STRING_LEN] = 0;
+               logIn[conf.MAX_STRING_LEN + 1] = 0;
                set( conf );
             }
 
@@ -114,7 +118,7 @@ class HausBusWebServer : Reactive
             }
       };
 
-     class Command
+      class Command
       {
          public:
 
@@ -130,7 +134,7 @@ class HausBusWebServer : Reactive
             {
                MAC mac;
                Configuration setConfiguration;
-            }__attribute__( ( packed ) );
+            } __attribute__( ( packed ) );
 
             ////    Operations    ////
 
@@ -166,7 +170,7 @@ class HausBusWebServer : Reactive
             {
                Configuration configuration;
                uint32_t ip;
-            }__attribute__( ( packed ) );
+            } __attribute__( ( packed ) );
 
             ////    Constructors and destructors    ////
 
@@ -196,7 +200,7 @@ class HausBusWebServer : Reactive
          private:
 
             Parameter params;
-      };      
+      };
 
       enum SubStates
       {
@@ -223,15 +227,17 @@ class HausBusWebServer : Reactive
          configuration = _config;
       }
 
-      bool handleRequest( HACF* message ); 
+      bool handleRequest( HACF* message );
 
-      void wakeUpDevice( const MAC& mac );    
+      void wakeUpDevice( const MAC& mac );
 
       HausBusWebServer();
       ~HausBusWebServer();
 
    private:
       static const uint8_t debugLevel;
+
+      bool firstConnect;
 
       EepromConfiguration* configuration;
 
