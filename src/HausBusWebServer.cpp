@@ -6,11 +6,11 @@
  */
 
 #include "HausBusWebServer.h"
+#include "HbcBoardFactory.h"
 #include "UdpStream.h"
 #include <ErrorMessage.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
-#include <HomeAutomation.h>
 #include <Gateway.h>
 
 
@@ -94,7 +94,12 @@ bool HausBusWebServer::notifyEvent( const Event& event )
       }
       else if ( inRunning() )
       {
-         if ( inSubState( OPEN_AP ) )
+         if ( inSubState( REBOOT ) )
+         {
+            WiFi.forceSleepBegin();
+            ResetSystem::reset();
+         }
+         else if ( inSubState( OPEN_AP ) )
          {
             if ( WiFi.status() != WL_DISCONNECTED )
             {
@@ -131,7 +136,7 @@ bool HausBusWebServer::notifyEvent( const Event& event )
                {
                   firstConnect = false;
                   new Gateway( new UdpStream(), Gateway::UDP_9 );
-                  new HomeAutomation();
+                  HbcBoardFactory::createBoard();
                }
             }
             if ( ++connectTries > MAX_CONNECT_TRIES )
@@ -240,12 +245,29 @@ void HausBusWebServer::onSubmit()
       {
          if ( ( server.arg( 0 ).length() + server.arg( 1 ).length() ) <= Configuration::MAX_STRING_LEN )
          {
-            configuration->setSsidString( server.arg( 0 ).begin() );
-            configuration->setPasswordString( server.arg( 1 ).begin() );
-            server.send( 200, "text/html", "OK.<br>Reconnecting device with new network config......" );
-            SET_STATE_L2( START_CONNECT );
+            if ( server.arg( 0 ).length() )
+            {
+               configuration->setSsidString( server.arg( 0 ).begin() );
+            }
+            if ( server.arg( 1 ).length() )
+            {
+               configuration->setPasswordString( server.arg( 1 ).begin() );
+            }
+            uint8_t oldBoardRevision = HomeAutomationHw::getFckE();
+            uint8_t newBoardRevision = server.arg( 2 ).toInt() & 0xFF;
+            if ( server.arg( 2 ).length() && ( newBoardRevision != oldBoardRevision ) )
+            {
+               // needs reboot to craete new board object
+               HomeAutomationConfiguration::restoreFactoryConfiguration( CONTROLLER_ID, newBoardRevision );
+               SET_STATE_L2( REBOOT );
+            }
+            else
+            {
+               SET_STATE_L2( START_CONNECT );
+               connectTries = 0;
+            }
+            server.send( 200, "text/html", "OK.<br>Reconnecting device with new config......" );
             setSleepTime( 500 );
-            connectTries = 0;
             return;
          }
       }

@@ -80,9 +80,9 @@ class ResetSystem
       // *  External Oscillator Failure Detections (XOSCFD) feature detects a failure
       // *  and switches to internal 2MHz RC oscillator.
       // */
-      inline static void reset()
+      inline static void reset( bool hard = false )
       {
-         ESP.reset();
+         hard ? ESP.reset() : ESP.restart();
       }
 };
 

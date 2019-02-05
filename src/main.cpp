@@ -52,29 +52,8 @@ void setup()
    UserSignature::setup( USER_SIGNATURE_SIZE );
    ApplicationTable::setup( APPLICATION_TABLE_SIZE );
    Scheduler::setup( MAX_JOBS );
-/*
-   PortPinUnit* myTestPin = new PortPinUnit( PortPin( 0, LED_BUILTIN ) );
-   evWakeup( myTestPin ).send();
-   PortPinUnit::Command::Toggle params;
-   params.offTime = 2;
-   params.onTime = 1;
-   params.quantity = 0; // endless
-   myTestPin->cmdToggle( params );
- */
-   DS1820::scanAndCreateDevices( PortPin( D4 ) );
-   DigitalPort* myPort = new DigitalPort( 0 );
-   if ( myPort != NULL )
-   {
-      myPort->setPins( 0, PortPin( D0 ) );
-      myPort->setPins( 1, PortPin( D1 ) );
-      myPort->setPins( 2, PortPin( D2 ) );
-      myPort->setPins( 3, PortPin( D3 ) );
-      myPort->setPins( 4, PortPin( D5 ) );
-      myPort->setPins( 5, PortPin( D6 ) );
-      myPort->setPins( 6, PortPin( D7 ) );
-      myPort->setPins( 7, PortPin( D8 ) );
-   }
 
+   // start the web server
    HausBusWebServer::instance();
 }
 

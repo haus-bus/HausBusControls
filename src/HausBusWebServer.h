@@ -204,6 +204,7 @@ class HausBusWebServer : Reactive
 
       enum SubStates
       {
+         REBOOT,
          START_CONNECT,
          WAIT_CONNECT,
          CONNECTED,

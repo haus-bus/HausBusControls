@@ -122,10 +122,9 @@ inline void HomeAutomationConfiguration::restoreFactoryConfiguration( uint8_t id
    memset( &buffer, 0xFF, sizeof( buffer ) );
    buffer[0] = id;
    buffer[1] = fcke;
-   buffer[2] = 0;
-   buffer[3] = 0;
-   buffer[4] = LBYTE( 0xFFFF >> CONTROLLER_ID );
-   buffer[5] = HBYTE( 0xFFFF >> CONTROLLER_ID );
+   buffer[2] = 0; // startup delay
+   buffer[3] = 0; // LogicalButtons
+   buffer[6] = 0; // MemoryReportTime
    UserSignature::write( 0, &buffer, sizeof( buffer ) );
 }
 
