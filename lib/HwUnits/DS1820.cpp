@@ -22,25 +22,25 @@ void DS1820::scanAndCreateDevices( PortPin _owPin )
    SystemTime::waitMs( 1 );
    DEBUG_M4( FSTR( "1-Wire port: " ), _owPin.getPortNumber(), FSTR( "pin: " ), _owPin.getPinNumber() );
    ow.reset_search();
-   OneWire::RomCode romCode;
-   while ( ow.search( (uint8_t*)&romCode ) )
+   DS1820::RomCode newRomCode;
+   while ( ow.search( (uint8_t*)&newRomCode ) )
    {
       DEBUG_M1( FSTR( "0x" ) );
       for ( uint8_t i = 0; i < sizeof( romCode ); i++ )
       {
-         DEBUG_L1( ( (uint8_t* )&romCode )[i] );
+         DEBUG_L1( ( (uint8_t* )&newRomCode )[i] );
       }
 
-      if ( Crc8::hasError( (uint8_t* )&romCode, sizeof( romCode ) ) )
+      if ( Crc8::hasError( (uint8_t* )&newRomCode, sizeof( newRomCode ) ) )
       {
          ERROR_1( "CRC is not valid!" );
          continue;
       }
 
-      if ( DS1820::isSensor( romCode.family ) )
+      if ( DS1820::isSensor( newRomCode.family ) )
       {
          DEBUG_L1( FSTR( "->DS18X20" ) );
-         new DS1820( ow, romCode );
+         new DS1820( ow, newRomCode );
       }
       else
       {
@@ -49,7 +49,7 @@ void DS1820::scanAndCreateDevices( PortPin _owPin )
    }
 }
 
-DS1820::DS1820( const OneWire& _hardware, const OneWire::RomCode& _romCode ) :
+DS1820::DS1820( const OneWire& _hardware, const DS1820::RomCode& _romCode ) :
    hardware( _hardware ), romCode( _romCode )
 {
    setId( ( ClassId::TEMPERATURE << 8 ) | ++numOfInstances );

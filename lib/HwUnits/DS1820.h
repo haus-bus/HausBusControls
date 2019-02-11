@@ -38,6 +38,13 @@ class DS1820 : public BaseSensorUnit
          OUT_OF_MEMORY
       };
 
+      struct RomCode
+      {
+         uint8_t family;
+         uint8_t serial[6];
+         uint8_t crc;
+      };
+
       static const uint8_t SCRATCHPAD_SIZE = 9;
 
       static const uint8_t DS18B20_CONF_REG = 4;
@@ -58,7 +65,7 @@ class DS1820 : public BaseSensorUnit
 
       ////    Constructors and destructors    ////
 
-      DS1820( const OneWire& _hardware, const OneWire::RomCode& _romCode );
+      DS1820( const OneWire& _hardware, const RomCode& _romCode );
 
       ////    Operations    ////
 
@@ -118,12 +125,12 @@ class DS1820 : public BaseSensorUnit
          return debugLevel;
       }
 
-      inline OneWire::RomCode getRomCode() const
+      inline const RomCode& getRomCode() const
       {
          return romCode;
       }
 
-      inline void setRomCode( OneWire::RomCode p_romCode )
+      inline void setRomCode( const RomCode& p_romCode )
       {
          romCode = p_romCode;
       }
@@ -142,7 +149,7 @@ class DS1820 : public BaseSensorUnit
 
       static const uint8_t debugLevel;
 
-      OneWire::RomCode romCode;
+      RomCode romCode;
 
 };
 
