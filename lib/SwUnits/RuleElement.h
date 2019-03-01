@@ -25,14 +25,14 @@ class RuleElement
       {
          uint32_t senderId;
          uint8_t data[6];
-      };
+      } __attribute__( ( packed ) );
 
       struct Action
       {
          uint32_t receiverId;
          uint8_t length;
          uint8_t data[5];
-      };
+      } __attribute__( ( packed ) );
 
       static const uint8_t DAY_ONLY = 60;
       static const uint8_t NIGHT_ONLY = 61;
@@ -48,7 +48,7 @@ class RuleElement
       {
          uint16_t startTime;
          uint16_t endTime;
-      };
+      } __attribute__( ( packed ) );
 
       ////    Constructors and destructors    ////
 
@@ -111,6 +111,6 @@ class RuleElement
       Action action[MAX_ACTIONS];
 
       static const uint8_t debugLevel;
-};
+} __attribute__( ( packed ) );
 
 #endif

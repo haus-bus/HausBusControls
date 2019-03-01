@@ -10,7 +10,7 @@
 #include <Traces/Logger.h>
 #include <string.h>
 
-const uint8_t PersistentMemory::debugLevel( DEBUG_LEVEL_LOW );
+const uint8_t PersistentMemory::debugLevel( DEBUG_LEVEL_OFF );
 
 PersistentMemory::PersistentMemory( const char* name, size_t _size ) : fileName( name )
 {

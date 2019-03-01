@@ -12,7 +12,7 @@ uint8_t DS1820::numOfInstances( 0 );
 
 bool DS1820::selfPowered( true );
 
-const uint8_t DS1820::debugLevel( DEBUG_LEVEL_LOW );
+const uint8_t DS1820::debugLevel( DEBUG_LEVEL_OFF );
 
 void DS1820::scanAndCreateDevices( PortPin _owPin )
 {

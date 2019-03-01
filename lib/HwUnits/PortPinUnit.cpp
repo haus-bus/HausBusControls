@@ -9,7 +9,7 @@
 #include <PortPin.h>
 #include <ErrorMessage.h>
 
-const uint8_t PortPinUnit::debugLevel( DEBUG_LEVEL_LOW );
+const uint8_t PortPinUnit::debugLevel( DEBUG_LEVEL_OFF );
 
 PortPinUnit::Response::Parameter& PortPinUnit::Response::setConfiguration()
 {

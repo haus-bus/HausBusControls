@@ -15,15 +15,15 @@ const uint8_t RuleElement::debugLevel( DEBUG_LEVEL_OFF );
 void RuleElement::getAction( RuleElement::Action* _action, uint8_t index ) const
 {
    uintptr_t address = reinterpret_cast<uintptr_t>( &condition )
-                       + getNumOfConditions() * sizeof( Condition ) + index * sizeof( Action );
+                       + getNumOfConditions() * sizeof( Condition )
+                       + index * sizeof( Action );
+
    ApplicationTable::read( address, _action, sizeof( Action ) );
 }
 
-void RuleElement::getCondition( RuleElement::Condition* _condition,
-                                uint8_t index ) const
+void RuleElement::getCondition( RuleElement::Condition* _condition, uint8_t index ) const
 {
-   ApplicationTable::read( reinterpret_cast<uintptr_t>( &condition[index] ),
-                           _condition, sizeof( Condition ) );
+   ApplicationTable::read( reinterpret_cast<uintptr_t>( &condition[index] ), _condition, sizeof( Condition ) );
 }
 
 uint16_t RuleElement::getLength() const
@@ -32,8 +32,7 @@ uint16_t RuleElement::getLength() const
 
    if ( length )
    {
-      length = length * sizeof( Condition ) + getNumOfActions() * sizeof( Action )
-               + 8;
+      length = 8 + length * sizeof( Condition ) + getNumOfActions() * sizeof( Action );
    }
    return length;
 }
@@ -50,8 +49,7 @@ uint8_t RuleElement::getNumOfActions() const
 
 uint8_t RuleElement::getNumOfConditions() const
 {
-   uint8_t value = ApplicationTable::read(
-      reinterpret_cast<uintptr_t>( &numOfConditions ) );
+   uint8_t value = ApplicationTable::read( reinterpret_cast<uintptr_t>( &numOfConditions ) );
    if ( value == 0xFF )
    {
       return 0;
@@ -64,11 +62,9 @@ uint8_t RuleElement::getState() const
    return ApplicationTable::read( reinterpret_cast<uintptr_t>( &state ) );
 }
 
-void RuleElement::getTimeCondition(
-   RuleElement::TimeCondition* _condition ) const
+void RuleElement::getTimeCondition( RuleElement::TimeCondition* _condition ) const
 {
-   ApplicationTable::read( reinterpret_cast<uintptr_t>( &startTime ), _condition,
-                           sizeof( TimeCondition ) );
+   ApplicationTable::read( reinterpret_cast<uintptr_t>( &startTime ), _condition, sizeof( TimeCondition ) );
 }
 
 bool RuleElement::isActiveForState( uint8_t _state ) const
@@ -82,8 +78,7 @@ bool RuleElement::isActiveForState( uint8_t _state ) const
 
       WeekTime now = Calender::getCurrentWeekTime();
       uint8_t specialTimeCondition = ( timeCondition.startTime & 0xFF );
-      if ( ( specialTimeCondition >= WeekTime::MAX_MINUTES )
-         && ( specialTimeCondition != 0xFF ) )
+      if ( ( specialTimeCondition >= WeekTime::MAX_MINUTES ) && ( specialTimeCondition != 0xFF ) )
       {
          DEBUG_M2( FSTR( "specialCondition " ), specialTimeCondition );
          if ( specialTimeCondition & DAYLY_MASK )
@@ -118,8 +113,7 @@ bool RuleElement::isActiveForState( uint8_t _state ) const
                return false;
             }
             timeCondition.startTime |= ~WeekTime::WEEK_DAY_MASK;
-            if ( ( timeCondition.endTime & WeekTime::WEEK_DAY_MASK )
-                 == WeekTime::WEEK_DAY_MASK )
+            if ( ( timeCondition.endTime & WeekTime::WEEK_DAY_MASK ) == WeekTime::WEEK_DAY_MASK )
             {
                timeCondition.endTime = timeCondition.startTime;
             }
@@ -127,8 +121,7 @@ bool RuleElement::isActiveForState( uint8_t _state ) const
       }
 
       DEBUG_M4( FSTR( "startTime " ), timeCondition.startTime, FSTR( " endTime " ), timeCondition.endTime );
-      if ( ( timeCondition.startTime == 0xFFFF )
-         || ( timeCondition.endTime == 0xFFFF ) )
+      if ( ( timeCondition.startTime == 0xFFFF ) || ( timeCondition.endTime == 0xFFFF ) )
       {
          return true;
       }
@@ -139,8 +132,7 @@ bool RuleElement::isActiveForState( uint8_t _state ) const
    return false;
 }
 
-bool RuleElement::isAnyConditionActive(
-   const HACF::ControlFrame& message ) const
+bool RuleElement::isAnyConditionActive( const HACF::ControlFrame& message ) const
 {
    Condition condition;
 
@@ -153,8 +145,7 @@ bool RuleElement::isAnyConditionActive(
       {
          DEBUG_M2( FSTR( "sender " ), senderId ); DEBUG_M2( FSTR( "c:" ), index );
          uint8_t length = message.getDataLength() - 1;
-         while ( ( message.data[length] == condition.data[length] )
-               || ( condition.data[length] == WILDCARD ) )
+         while ( ( message.data[length] == condition.data[length] ) || ( condition.data[length] == WILDCARD ) )
          {
             DEBUG_L2( ' ', condition.data[length] );
             if ( length == 0 )
@@ -173,8 +164,8 @@ RuleElement* RuleElement::next() const
    uint16_t length = getLength();
    if ( length != 0 )
    {
-      return reinterpret_cast<RuleElement*>( reinterpret_cast<uintptr_t>( this )
-                                             + length );
+      DEBUG_M2( FSTR( "next Element: 0x" ), reinterpret_cast<uintptr_t>( this ) + length );
+      return reinterpret_cast<RuleElement*>( reinterpret_cast<uintptr_t>( this ) + length );
    }
    return 0;
 }

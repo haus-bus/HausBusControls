@@ -12,7 +12,7 @@
 
 #include <ErrorMessage.h>
 
-const uint8_t DigitalPort::debugLevel( DEBUG_LEVEL_LOW );
+const uint8_t DigitalPort::debugLevel( DEBUG_LEVEL_OFF );
 
 DigitalPort::Response::Parameter& DigitalPort::Response::setConfiguration()
 {
