@@ -30,15 +30,21 @@ class GlobalInterrupt
 
       inline static void restore( sreg_t context )
       {
-      }        
+      }
 
-      inline static void enable() {}
+      inline static void enable()
+      {
+      }
 
-      inline static void disable() {}
+      inline static void disable()
+      {
+      }
 
-      inline static void waitForInterrupt() {}
+      inline static void waitForInterrupt()
+      {
+      }
 
-    
+
 };
 #endif
 #endif

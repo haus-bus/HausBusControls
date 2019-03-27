@@ -18,30 +18,30 @@ class GlobalInterrupt
 
       typedef sreg_t uint32_t;
 
-      inline static void disable() 
+      inline static void disable()
       {
-          cli();
+         cli();
       }
 
-      inline static void enable() 
+      inline static void enable()
       {
-          sei();
+         sei();
       }
 
       inline static sreg_t lock()
       {
-         return xt_rsil(15);
+         return xt_rsil( 15 );
       }
 
       inline static void restore( sreg_t context )
       {
-          xt_wsr_ps( context );
-      }  
+         xt_wsr_ps( context );
+      }
 
-      inline static void waitForInterrupt() 
+      inline static void waitForInterrupt()
       {
-          __asm__ __volatile__ ( "sleep" ); 
-      }    
+         __asm__ __volatile__ ( "sleep" );
+      }
 };
 
 #endif
