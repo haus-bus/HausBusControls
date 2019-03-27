@@ -8,13 +8,15 @@
 #ifndef SwFramework_MemoryManager_MemoryManager_H
 #define SwFramework_MemoryManager_MemoryManager_H
 
+#include <stdint.h>
+#include <stddef.h>
 
 static const uint8_t STACK_MASK = 'S';
 static const uint8_t HEAP_MASK = 'H';
 
 void* allocOnce( size_t size );
 
-void getUnusedMemory( uint16_t& freeStack, uint16_t& freeHeap );
+void getUnusedMemory( uint16_t* freeStack, uint16_t* freeHeap );
 
 bool hasStackError();
 

@@ -12,8 +12,7 @@
 #include <GlobalInterruptAVR.h>
 #elif defined ESP8266
 #include <GlobalInterruptESP8266.h>
-#else
-#warning "Unkown environment, please extend support here."
+#elif defined __DUMMY__
 
 class GlobalInterrupt
 {
@@ -21,7 +20,7 @@ class GlobalInterrupt
 
    public:
 
-      typedef sreg_t unsigned char;
+      typedef unsigned char sreg_t;
 
       inline static sreg_t lock()
       {
@@ -46,6 +45,8 @@ class GlobalInterrupt
 
 
 };
-#endif
-#endif
 
+#else
+#error "Unkown environment, please extend support here."
+#endif
+#endif
