@@ -7,7 +7,7 @@
 
 #include "RuleElement.h"
 
-#include <Traces/Logger.h>
+#include <Tracing/Logger.h>
 #include <Time/Calender.h>
 
 const uint8_t RuleElement::debugLevel( DEBUG_LEVEL_OFF );

@@ -12,7 +12,7 @@
 #include <Security/Checksum.h>
 #include <DebugOptions.h>
 #include <Protocols/HACF.h>
-#include <Traces/Logger.h>
+#include <Tracing/Logger.h>
 #include <SystemTime.h>
 #include <IResponse.h>
 #include <EventPkg/EventPkg.h>

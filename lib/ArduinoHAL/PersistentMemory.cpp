@@ -7,7 +7,7 @@
 
 #include "PersistentMemory.h"
 #include <FS.h>
-#include <Traces/Logger.h>
+#include <Tracing/Logger.h>
 #include <string.h>
 
 const uint8_t PersistentMemory::debugLevel( DEBUG_LEVEL_OFF );
@@ -141,7 +141,7 @@ bool PersistentMemory::commit()
 {
    DEBUG_H1( " save data" );
    File theFile = SPIFFS.open( fileName, "w" );
-   if ( theFile != NULL )
+   if ( theFile )
    {
       size_t writtenBytes = theFile.write( BaseAddress, size );
       theFile.close();

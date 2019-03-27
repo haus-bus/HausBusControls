@@ -8,7 +8,7 @@
 #include "PersistentRules.h"
 #include "RuleEngine.h"
 
-#include <Traces/Logger.h>
+#include <Tracing/Logger.h>
 
 const uint8_t PersistentRules::debugLevel( DEBUG_LEVEL_OFF );
 

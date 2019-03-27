@@ -9,7 +9,7 @@
 #define SwUnits_H
 
 #include <DefaultTypes.h>
-#include <Traces/Logger.h>
+#include <Tracing/Logger.h>
 #include <IResponse.h>
 #include <EventPkg/EventPkg.h>
 

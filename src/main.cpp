@@ -3,7 +3,7 @@
 #include <DigitalPort.h>
 #include <DS1820.h>
 #include <SystemTime.h>
-#include <Traces/Logger.h>
+#include <Tracing/Logger.h>
 #include <ApplicationTable.h>
 #include <UserSignature.h>
 #include <FS.h>

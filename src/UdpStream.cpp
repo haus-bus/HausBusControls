@@ -7,6 +7,7 @@
 
 #include "UdpStream.h"
 #include <EventPkg/EventPkg.h>
+#include <CriticalSection.h>
 #include <ESP8266WiFi.h>
 
 #define getId() FSTR( "UdpStream::" )

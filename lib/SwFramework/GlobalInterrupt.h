@@ -8,7 +8,12 @@
 #ifndef Basics_GlobalInterrupt_H
 #define Basics_GlobalInterrupt_H
 
-#include <avr/interrupt.h>
+#ifdef __AVR__
+#include <GlobalInterruptAVR.h>
+#elif defined ESP8266
+#include <GlobalInterruptESP8266.h>
+#else
+#warning "Unkown environment, please extend support here."
 
 class GlobalInterrupt
 {
@@ -16,21 +21,25 @@ class GlobalInterrupt
 
    public:
 
-      inline static void disable()
+      typedef sreg_t unsigned char;
+
+      inline static sreg_t lock()
       {
-         cli();
+         return 0;
       }
 
-      inline static void enable()
+      inline static void restore( sreg_t context )
       {
-         sei();
-      }
+      }        
 
-      inline static void waitForInterrupt()
-      {
-         __asm__ __volatile__ ( "sleep" );
-      }
+      inline static void enable() {}
+
+      inline static void disable() {}
+
+      inline static void waitForInterrupt() {}
+
+    
 };
-
+#endif
 #endif
 
