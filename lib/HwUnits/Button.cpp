@@ -138,7 +138,6 @@ void Button::tick()
       event.bit.notifyOnClicked = 1;
       event.bit.notifyOnHoldStart = 1;
    }
-   STATE_L2( state );
    notifyNewState( event );
    setSleepTime( NO_WAKE_UP );
 }
@@ -211,7 +210,6 @@ void Button::updateState( uint8_t pressed )
             setSleepTime( NO_WAKE_UP );
          }
       }
-      STATE_L2( state );
       notifyNewState( event );
    }
 }

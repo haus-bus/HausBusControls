@@ -16,7 +16,7 @@ class GlobalInterrupt
 
    public:
 
-      typedef sreg_t uint32_t;
+      typedef uint32_t sreg_t;
 
       inline static void disable()
       {
