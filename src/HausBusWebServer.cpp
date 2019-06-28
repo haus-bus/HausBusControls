@@ -9,6 +9,7 @@
 #include "HbcBoardFactory.h"
 #include "UdpStream.h"
 #include <ErrorMessage.h>
+#include <ESP8266httpUpdate.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <Gateway.h>
@@ -127,10 +128,12 @@ bool HausBusWebServer::notifyEvent( const Event& event )
             if ( WiFi.status() == WL_CONNECTED )
             {
                SET_STATE_L2( CONNECTED );
-               if ( !mdns.begin( String( "ESP-HBC-" + String( HACF::deviceId ) ).begin(), WiFi.localIP() ) )
+               /*static String hostname( "ESP-HBC-" + String( HACF::deviceId ) );
+               if ( !mdns.begin( "ESP-HBC" ) )
                {
                   ERROR_1( "MDNS failed to start" );
                }
+               */
                DEBUG_M2( "myIP is ", WiFi.localIP().toString().begin() );
                if ( firstConnect )
                {
@@ -294,7 +297,6 @@ void HausBusWebServer::onUpdate()
       }
       else
       {
-/*
         ESPhttpUpdate.rebootOnUpdate(false);
         t_httpUpdate_return ret = ESPhttpUpdate.update(server.arg(0), 80, "/" + server.arg(1));
         char logString[130];
@@ -314,7 +316,6 @@ void HausBusWebServer::onUpdate()
           delay(500);
           ESP.reset();
         }
- */
       }
    }
    else
