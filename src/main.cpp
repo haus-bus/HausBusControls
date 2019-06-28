@@ -2,7 +2,8 @@
 #include <Scheduler.h>
 #include <DigitalPort.h>
 #include <DS1820.h>
-#include <SystemTime.h>
+#include <Time/Calender.h>
+#include <Time/Timestamp.h>
 #include <Tracing/Logger.h>
 #include <ApplicationTable.h>
 #include <UserSignature.h>
@@ -57,7 +58,13 @@ void setup()
    HausBusWebServer::instance();
 }
 
+Timestamp lastCalenderUpdate;
 void loop()
 {
+   if ( lastCalenderUpdate.since() >= 1000 )
+   {
+      Calender::now.addSecond();
+      lastCalenderUpdate += 1000;
+   }
    Scheduler::runJobs();
 }
